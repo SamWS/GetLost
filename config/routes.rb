@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   resources :events
   resources :hobbies
 
+  root :to => 'events#index'
+
+  get 'welcome/index', to: 'welcome#index'
+
   get "api/events", to: "api/events#list_within"
 
   get "api/hobbies", to: "api/hobbies#list_hobbies"
