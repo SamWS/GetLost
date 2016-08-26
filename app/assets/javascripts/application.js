@@ -130,24 +130,24 @@ function initMap() {
 
 var row_check = 10000000000;
 
-// setInterval(function(){
-//   console.log("row_check"+row_check);
-//   var events;
-//   $.ajax({
-//     type: "GET",
-//     url: "/api/events/recent",
-//     data: {lastCheck: row_check}
-//   }).done(function(response){
-//     console.log(response);
-//     row_check = response.current_count
-//     if(response.event_update !== null){
-//       events = response.event_update.map(function(evt) {
-//         return {id: evt.id, listing: evt.listing, sport: evt.sport, icon: evt.hobby_image_url, latLng: {lat: evt.latitude, lng: evt.longitude}}
-//       });
-//       loadMarkers(events);
-//     }
-//   });
-// }, 3000);
+setInterval(function(){
+  console.log("row_check"+row_check);
+  var events;
+  $.ajax({
+    type: "GET",
+    url: "/api/events/recent",
+    data: {lastCheck: row_check}
+  }).done(function(response){
+    console.log(response);
+    row_check = response.current_count
+    if(response.event_update !== null){
+      events = response.event_update.map(function(evt) {
+        return {id: evt.id, listing: evt.listing, sport: evt.sport, icon: evt.hobby_image_url, latLng: {lat: evt.latitude, lng: evt.longitude}}
+      });
+      loadMarkers(events);
+    }
+  });
+}, 3000);
 
 function api_request_events(route, args) {
   // request events from db and plot markers on map
@@ -186,7 +186,7 @@ function locateUser(){
       currentLoc = pos;
       var marker = dropMarker([pos]);
       // add event markers around user's current location
-      eventsObj.push(api_request_events("/api/events", {lat: pos.lat, lng: pos.lng, radius: 100}));
+      eventsObj.push(api_request_events("/api/events", {lat: pos.lat, lng: pos.lng, radius: 25}));
 
     }, function() {
       // if geolocation failed
