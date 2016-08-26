@@ -120,6 +120,7 @@ function initMap() {
   locateUser();
   map.addListener('click', function(event) {
     getLostTo = event.latLng.toJSON();
+    // clearMarkers(eventMarkers);
     plotMarker(getLostTo);
     console.log(getLostTo);
     console.log(markers[0].getPosition().lat());
@@ -129,24 +130,24 @@ function initMap() {
 
 var row_check = 10000000000;
 
-setInterval(function(){
-  console.log("row_check"+row_check);
-  var events;
-  $.ajax({
-    type: "GET",
-    url: "/api/events/recent",
-    data: {lastCheck: row_check}
-  }).done(function(response){
-    console.log(response);
-    row_check = response.current_count
-    if(response.event_update !== null){
-      events = response.event_update.map(function(evt) {
-        return {id: evt.id, listing: evt.listing, sport: evt.sport, icon: evt.hobby_image_url, latLng: {lat: evt.latitude, lng: evt.longitude}}
-      });
-      loadMarkers(events);
-    }
-  });
-}, 3000);
+// setInterval(function(){
+//   console.log("row_check"+row_check);
+//   var events;
+//   $.ajax({
+//     type: "GET",
+//     url: "/api/events/recent",
+//     data: {lastCheck: row_check}
+//   }).done(function(response){
+//     console.log(response);
+//     row_check = response.current_count
+//     if(response.event_update !== null){
+//       events = response.event_update.map(function(evt) {
+//         return {id: evt.id, listing: evt.listing, sport: evt.sport, icon: evt.hobby_image_url, latLng: {lat: evt.latitude, lng: evt.longitude}}
+//       });
+//       loadMarkers(events);
+//     }
+//   });
+// }, 3000);
 
 function api_request_events(route, args) {
   // request events from db and plot markers on map
@@ -201,6 +202,7 @@ function locateUser(){
 //Let user drop a "pin"
 function plotMarker(location) {
   clearMarkers(markers);
+  // clearMarkers(eventMarkers);
   closeInfoWindows(infoWindows);
   var marker = dropMarker([location],"user");
 
@@ -215,9 +217,18 @@ function plotMarker(location) {
 
     var updateLoc = event.latLng.toJSON();
     infoWindow.open(map, marker);
-    $("#map").on('click', '#expBtn', function(){
+    // $("#map").on('click', '#expBtn', function(){
+    //     console.log('button clicked')
+    //     clearMarkers(eventMarkers);
+    //     eventMarkers = [];
+    //     api_request_events("/api/events", {lat: getLostTo.lat, lng: getLostTo.lng, radius: 25});
+    //
+    // });
+
+    $('#expBtn').on('click', function(){
         console.log('button clicked')
         clearMarkers(eventMarkers);
+        eventMarkers = [];
         api_request_events("/api/events", {lat: getLostTo.lat, lng: getLostTo.lng, radius: 25});
 
     });
@@ -268,6 +279,7 @@ function dropMarker(locationArr, markerType, iconUrl) {
      //icon url
    }
    for (var i = 0; i < locationArr.length; i++) {
+     console.log("drop times1");
       marker = addMarkerWithTimeout(locationArr[i], i * 400, draggable, iconUrl, markerType);
    }
      return marker;
@@ -337,8 +349,9 @@ function addInfoWindow(){
 // Sets the map on all markers in the array.
 function setMapOnAll(map, toClear) {
   for (var i = 0; i < toClear.length; i++) {
-    toClear[i].setMap(map);
+    toClear[i].setMap(null);
   }
+  toClear = []
 }
 
 // Removes the markers from the map, but keeps them in the array.

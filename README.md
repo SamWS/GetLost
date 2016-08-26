@@ -4,7 +4,7 @@
 
 ##How to Use
 
-[View App](https://hitch-ridesharing.herokuapp.com/)
+[View App](https://getlostaus.herokuapp.com/events)
 
 The page will load on your current location and surrounding areas. User the search bar or click on the map to find events happening near you. To create or join an event, sign up! There's 10 activities you can do, but we'll be bringing more to you in the future!
 
